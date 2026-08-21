@@ -10,13 +10,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#FBFAF7;
-    --ink:#16130F;
-    --muted:#56504B;
-    --rule:#D8D3CA;
-    --rule-strong:#16130F;
-    --accent:#C43A1E;
-    --second:#1F4D5C;
+    --paper:#E9EFF1;
+    --ink:#14171A;
+    --muted:#4B5356;
+    --rule:#CBD5D8;
+    --rule-strong:#14171A;
+    --accent:#14452F;
+    --second:#14171A;
 
     --sans:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
     --serif:"Newsreader",Georgia,"Times New Roman",serif;
@@ -31,7 +31,7 @@
     --lede:clamp(1.25rem,1.05rem + 0.85vw,1.75rem);
     --h2:clamp(1.5rem,1.1rem + 1.6vw,2.5rem);
     --h3:clamp(1.25rem,1.05rem + 0.85vw,1.75rem);
-    --label:0.6875rem;
+    --label:0.75rem;
   }
 
   *,*::before,*::after{box-sizing:border-box}
@@ -94,7 +94,7 @@
   }
 
   .masthead__kicker{
-    display:flex;flex-wrap:wrap;gap:8px var(--gap);
+    display:flex;flex-wrap:nowrap;gap:8px 16px;
     align-items:baseline;justify-content:space-between;
     padding-bottom:14px;
     border-bottom:1px solid var(--rule-strong);
@@ -103,7 +103,7 @@
   h1{
     font-family:var(--sans);
     font-weight:800;
-    font-size:clamp(1.8rem,7.25vw,5.75rem);
+    font-size:clamp(2.6rem,7.25vw,5.75rem);
     line-height:0.82;
     letter-spacing:-0.045em;
     margin:clamp(18px,2.6vw,34px) 0 0;
@@ -119,14 +119,53 @@
   .thesis{
     font-family:var(--sans);
     font-weight:700;
-    font-size:clamp(1.375rem,0.9rem + 2.5vw,2.75rem);
-    line-height:1.08;
+    font-size:clamp(1.25rem,0.9rem + 2.5vw,2.75rem);
+    line-height:1.1;
     letter-spacing:-0.032em;
     margin:clamp(18px,2.4vw,30px) 0 0;
-    max-width:26ch;
+    max-width:30ch;
     text-wrap:balance;
   }
   .thesis span{color:var(--accent)}
+
+  .masthead__top{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:clamp(22px,3vw,40px) var(--gap);
+    align-items:end;
+  }
+
+  .proof{
+    margin:0;
+    display:grid;
+    grid-template-columns:1fr;
+    border-top:1px solid var(--rule-strong);
+    font-family:var(--sans);
+  }
+  .proof>div{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    align-items:baseline;
+    gap:4px 16px;
+    padding:12px 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .proof>div:last-child{border-bottom:0}
+  .proof dt{
+    font-weight:800;
+    font-size:clamp(1.75rem,1.2rem + 1.6vw,2.5rem);
+    line-height:0.95;
+    letter-spacing:-0.04em;
+    font-variant-numeric:tabular-nums;
+    color:var(--accent);
+  }
+  .proof dd{
+    margin:0;
+    font-size:0.875rem;
+    line-height:1.4;
+    color:var(--muted);
+    max-width:36ch;
+  }
 
   .masthead__role{
     display:grid;
@@ -155,13 +194,13 @@
   /* work rights: the strip that has to be seen */
   .rights{
     display:grid;
-    grid-template-columns:auto 1fr;
+    grid-template-columns:1fr;
     gap:6px 22px;
     align-items:start;
     margin-top:clamp(20px,2.6vw,34px);
     padding:16px 0 16px 20px;
     border-left:5px solid var(--second);
-    background:linear-gradient(90deg,rgba(31,77,92,0.07),rgba(31,77,92,0));
+    background:rgba(20,23,26,0.05);
   }
   .rights p{
     margin:0;
@@ -171,18 +210,18 @@
     line-height:1.4;
     max-width:62ch;
   }
-  .rights .label{padding-top:4px;white-space:nowrap}
+  .rights .label{padding-top:0}
 
   .contacts{
-    display:flex;flex-wrap:wrap;
-    gap:4px clamp(16px,2.4vw,34px);
+    display:grid;grid-template-columns:1fr;
+    gap:0 clamp(16px,2.4vw,34px);
     margin-top:clamp(22px,2.8vw,36px);
     padding:0;list-style:none;
     font-family:var(--sans);
     font-size:0.9375rem;
   }
   .contacts a{
-    display:inline-block;
+    display:block;
     text-decoration:none;
     padding:6px 0;
     border-bottom:1px solid var(--rule);
@@ -401,7 +440,7 @@
     border-top:1px solid var(--rule);
     margin-top:clamp(30px,4vw,56px);
   }
-  footer p{margin:0;font-family:var(--sans);font-size:0.8125rem;color:var(--muted)}
+  footer p{margin:0;font-family:var(--sans);font-size:0.875rem;line-height:1.5;color:var(--muted)}
 
   /* ---------- motion ---------- */
 
@@ -418,7 +457,19 @@
 
   /* ---------- breakpoints ---------- */
 
+  @media (max-width:699px){
+    .masthead__kicker .label{font-size:0.625rem;letter-spacing:0.09em}
+    .item__stack{font-size:0.875rem;line-height:1.5}
+    .item__body a{display:inline-block;padding:9px 0}
+    .contacts a{border-bottom:1px solid var(--rule);padding:10px 0}
+    .contacts li:first-child a{border-top:1px solid var(--rule)}
+  }
+
   @media (min-width:700px){
+    .rights{grid-template-columns:auto 1fr;gap:6px 22px}
+    .rights .label{padding-top:4px;white-space:nowrap}
+    .contacts{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px clamp(16px,2.4vw,34px)}
+    .contacts a{display:inline-block}
     .masthead__role{grid-template-columns:minmax(0,1fr) auto;align-items:baseline}
     .masthead__role .where{text-align:right}
     .contact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -427,6 +478,11 @@
   }
 
   @media (min-width:1000px){
+    .masthead__top{grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(30px,3vw,56px)}
+    .proof>div{grid-template-columns:1fr;gap:2px}
+    .proof dd{max-width:30ch}
+    .thesis{max-width:26ch;margin-bottom:0}
+    .contacts{display:flex;flex-wrap:wrap}
     .grid{grid-template-columns:minmax(0,3fr) minmax(0,9fr)}
     .item{grid-template-columns:minmax(0,3fr) minmax(0,9fr)}
     .item__meta{grid-column:1}
@@ -448,9 +504,26 @@
     <p class="label label--accent">Sydney, New South Wales</p>
   </div>
 
-  <h1>Tony<span class="l2">Huang</span></h1>
-
-  <p class="thesis">Most engineers show you what they built. I will also show you <span>how I stopped it going wrong.</span></p>
+  <div class="masthead__top">
+    <div class="masthead__name">
+      <h1>Tony<span class="l2">Huang</span></h1>
+      <p class="thesis">Most engineers show you what they built. I will also show you <span>how I stopped it going wrong.</span></p>
+    </div>
+    <dl class="proof">
+      <div>
+        <dt>217</dt>
+        <dd>Records landed. Zero errors on the first source taken fully to production.</dd>
+      </div>
+      <div>
+        <dt>206</dt>
+        <dd>Automated test files, including regression suites built from real sample PDFs.</dd>
+      </div>
+      <div>
+        <dt>775</dt>
+        <dd>Commits on the platform that publishes to the live portal.</dd>
+      </div>
+    </dl>
+  </div>
 
   <div class="masthead__role">
     <p class="role">AI and Automation Engineer. Data and Analytics.</p>
