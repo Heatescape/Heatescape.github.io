@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tony Huang, AI and Automation Engineer, Sydney</title>
+<meta name="description" content="Most engineers show you what they built. This page shows the controls that stop it going wrong: audit logging, risk based approval routing, and the concurrency guard that blocked a real stale write in production.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F7FA;
+    --dot:#DBE1EA;
+    --surface:#FFFFFF;
+    --line:#E3E8EF;
+    --line-strong:#C6CEDA;
+    --ink:#1B1E25;
+    --muted:#565C68;
+    --faint:#7C838F;
+
+    --blue:#1B4FD8;
+    --blue-soft:#EDF2FE;
+    --blue-line:#C3D0F5;
+    --green:#0F6B44;
+    --green-soft:#E9F6F0;
+    --green-line:#9FD3BC;
+    --amber:#8A5A00;
+    --amber-soft:#FBF3E2;
+    --amber-line:#EBD3A0;
+    --red:#A4231C;
+    --red-soft:#FCEDEC;
+    --red-line:#F0C0BC;
+
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+
+    --pad:clamp(18px,4.4vw,72px);
+    --gap:clamp(16px,2.4vw,32px);
+    --sect:clamp(56px,8vw,116px);
+
+    --r:4px;
+    --r-lg:10px;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+
+  body{
+    margin:0;
+    color:var(--ink);
+    background-color:var(--bg);
+    background-image:radial-gradient(var(--dot) 1px,transparent 1px);
+    background-size:24px 24px;
+    background-position:-1px -1px;
+    font-family:var(--sans);
+    font-size:clamp(1rem,0.96rem + 0.2vw,1.0625rem);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  ::selection{background:var(--blue);color:#fff}
+
+  .wrap{max-width:1280px;margin:0 auto;padding:0 var(--pad)}
+
+  a{color:var(--blue)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:2px}
+
+  .skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:#fff;padding:12px 18px;font-family:var(--mono);font-size:0.8125rem;z-index:60}
+  .skip:focus{left:var(--pad);top:12px}
+
+  .mono{font-family:var(--mono)}
+
+  .tag{
+    font-family:var(--mono);
+    font-size:0.6875rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--faint);
+    margin:0;
+  }
+
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--mono);font-size:0.6875rem;font-weight:500;
+    letter-spacing:0.09em;text-transform:uppercase;
+    padding:4px 9px;border:1px solid;border-radius:999px;
+    max-width:100%;
+  }
+  .chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+  .chip--pass{color:var(--green);border-color:var(--green-line);background:var(--green-soft)}
+  .chip--review{color:var(--amber);border-color:var(--amber-line);background:var(--amber-soft)}
+  .chip--block{color:var(--red);border-color:var(--red-line);background:var(--red-soft)}
+  .chip--info{color:var(--blue);border-color:var(--blue-line);background:var(--blue-soft)}
+  .chip--wip{color:var(--muted);border-color:var(--line-strong);background:#EEF1F5}
+
+  /* ================= header ================= */
+
+  .doc{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--r-lg);
+    box-shadow:0 1px 0 rgba(27,30,37,0.04);
+    overflow:hidden;
+  }
+
+  .masthead{padding-top:clamp(16px,3vw,34px);padding-bottom:clamp(16px,3vw,30px)}
+
+  .doc__bar{
+    display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between;align-items:center;
+    padding:10px clamp(16px,2.4vw,30px);
+    border-bottom:1px solid var(--line);
+    background:#FCFDFE;
+  }
+
+  .doc__body{padding:clamp(22px,4vw,52px) clamp(16px,3.2vw,52px) clamp(24px,4vw,48px)}
+
+  h1{
+    font-size:clamp(2.5rem,1.6rem + 4.2vw,5rem);
+    font-weight:700;
+    letter-spacing:-0.04em;
+    line-height:0.98;
+    margin:0;
+  }
+
+  .tagline{
+    font-size:clamp(1.125rem,1rem + 0.75vw,1.625rem);
+    line-height:1.3;
+    letter-spacing:-0.018em;
+    font-weight:500;
+    max-width:34ch;
+    margin:clamp(14px,1.8vw,22px) 0 0;
+  }
+  .tagline em{font-style:normal;color:var(--blue);box-shadow:inset 0 -0.42em 0 var(--blue-soft)}
+
+  .meta{
+    margin:clamp(22px,3vw,34px) 0 0;
+    border-top:1px solid var(--line);
+  }
+  .meta__row{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:2px 24px;
+    padding:11px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .meta dt{
+    font-family:var(--mono);font-size:0.6875rem;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--faint);padding-top:3px;
+  }
+  .meta dd{margin:0;font-size:1rem;line-height:1.45}
+  .meta__row--rights{
+    background:var(--blue-soft);
+    border-left:3px solid var(--blue);
+    padding-left:14px;padding-right:14px;
+    border-bottom-color:var(--blue-line);
+    border-radius:0 var(--r) var(--r) 0;
+  }
+  .meta__row--rights dd{font-weight:500}
+  .meta__row--rights dt{color:var(--blue)}
+
+  .links{display:flex;flex-wrap:wrap;gap:8px 10px;margin:0;padding:0;list-style:none}
+  .links a{
+    display:inline-block;
+    font-family:var(--mono);font-size:0.8125rem;
+    text-decoration:none;color:var(--ink);
+    padding:6px 11px;border:1px solid var(--line-strong);border-radius:var(--r);
+    background:#fff;
+    transition:transform 160ms ease,border-color 160ms ease,color 160ms ease;
+  }
+  .links a:hover{color:var(--blue);border-color:var(--blue);transform:translateY(-2px)}
+
+  /* ================= sections ================= */
+
+  main{display:block}
+
+  .sect{padding-top:var(--sect)}
+
+  .sect__head{
+    display:grid;grid-template-columns:1fr;gap:6px var(--gap);
+    padding-bottom:clamp(18px,2.4vw,28px);
+    margin-bottom:clamp(20px,2.6vw,32px);
+    border-bottom:1px solid var(--line-strong);
+  }
+  .sect__head h2{
+    font-size:clamp(1.5rem,1.15rem + 1.5vw,2.375rem);
+    font-weight:700;letter-spacing:-0.032em;line-height:1.06;
+    margin:4px 0 0;text-wrap:balance;
+  }
+  .sect__head p.blurb{margin:10px 0 0;color:var(--muted);max-width:62ch}
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--r-lg);
+    padding:clamp(18px,2.4vw,30px);
+  }
+
+  /* ---- abstract ---- */
+  .abstract{
+    display:grid;grid-template-columns:1fr;gap:var(--gap);
+  }
+  .abstract p{margin:0 0 1em;max-width:64ch;color:var(--ink)}
+  .abstract p:last-child{margin-bottom:0}
+  .abstract .pull{
+    font-family:var(--mono);font-size:0.875rem;line-height:1.65;
+    color:var(--muted);border-left:2px solid var(--blue);padding-left:16px;
+  }
+
+  /* ---- primary controls ---- */
+
+  .controls{display:grid;grid-template-columns:1fr;gap:var(--gap)}
+
+  .ctrl{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--r-lg);
+    padding:clamp(20px,2.6vw,32px);
+    display:grid;grid-template-columns:1fr;gap:16px var(--gap);
+    transition:transform 200ms ease,border-color 200ms ease;
+  }
+  .ctrl::before{
+    content:"";position:absolute;left:-1px;top:18px;bottom:18px;width:3px;
+    border-radius:0 3px 3px 0;background:var(--line-strong);
+  }
+  .ctrl--audit::before{background:var(--blue)}
+  .ctrl--route::before{background:var(--amber)}
+  .ctrl--race::before{background:var(--red)}
+  .ctrl--priv::before{background:var(--green)}
+  .ctrl:hover{transform:translateY(-3px);border-color:var(--line-strong)}
+
+  .ctrl__id{
+    display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+    margin:0 0 12px;
+  }
+  .ctrl h3{
+    font-size:clamp(1.125rem,1rem + 0.6vw,1.5rem);
+    font-weight:600;letter-spacing:-0.022em;line-height:1.2;
+    margin:0 0 10px;max-width:26ch;
+  }
+  .ctrl p{margin:0;color:var(--muted);max-width:60ch}
+  .ctrl p+p{margin-top:10px}
+
+  .note{
+    font-family:var(--mono);font-size:0.75rem;line-height:1.6;
+    color:var(--muted);
+    background:#F8FAFC;
+    border:1px dashed var(--line-strong);
+    border-radius:var(--r);
+    padding:12px 14px;
+    align-self:start;
+  }
+  .note b{display:block;font-weight:500;color:var(--faint);letter-spacing:0.08em;text-transform:uppercase;font-size:0.6875rem;margin-bottom:6px}
+  .note--flag{background:var(--red-soft);border-color:var(--red-line);color:#7E1D17}
+  .note--flag b{color:var(--red)}
+
+  /* ---- secondary controls ---- */
+
+  .controls-min{
+    display:grid;grid-template-columns:1fr;gap:0;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+    overflow:hidden;margin-top:var(--gap);
+  }
+  .controls-min article{padding:16px clamp(16px,2.2vw,26px);border-top:1px solid var(--line)}
+  .controls-min article:first-child{border-top:0}
+  .controls-min h3{font-size:1rem;font-weight:600;letter-spacing:-0.012em;margin:8px 0 4px}
+  .controls-min p{margin:0;color:var(--muted);font-size:0.9375rem;max-width:64ch}
+
+  /* ---- write path rail ---- */
+
+  .rail{margin:0;padding:0;list-style:none;position:relative}
+  .rail>li{position:relative;padding:0 0 22px 30px}
+  .rail>li::before{
+    content:"";position:absolute;left:5px;top:8px;bottom:-8px;width:1px;background:#AFB9C8;
+  }
+  .rail>li:last-child{padding-bottom:0}
+  .rail>li:last-child::before{display:none}
+  .rail>li::after{
+    content:"";position:absolute;left:0;top:5px;width:11px;height:11px;
+    border-radius:50%;background:#fff;border:2px solid var(--line-strong);
+  }
+  .rail>li.is-key::after{border-color:var(--blue)}
+  .rail>li.is-stop::after{border-color:var(--red)}
+  .rail__step{font-family:var(--mono);font-size:0.6875rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:3px}
+  .rail__title{font-weight:600;letter-spacing:-0.012em;display:block}
+  .rail p{margin:4px 0 0;color:var(--muted);font-size:0.9375rem;max-width:56ch}
+  .branch{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
+  .branch li{
+    display:grid;grid-template-columns:1fr;gap:6px;
+    border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;background:#FBFCFE;
+  }
+  .branch .chip{justify-self:start}
+  .branch span.txt{font-size:0.9375rem;color:var(--muted)}
+
+  /* ---- specs (selected work) ---- */
+
+  .spec{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:clamp(20px,2.6vw,34px);margin-top:var(--gap);
+  }
+  .spec:first-child{margin-top:0}
+  .spec__head{display:grid;grid-template-columns:1fr;gap:10px var(--gap);padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .spec h3{
+    font-size:clamp(1.1875rem,1.05rem + 0.7vw,1.625rem);
+    font-weight:700;letter-spacing:-0.028em;line-height:1.14;margin:8px 0 0;max-width:24ch;
+  }
+  .spec__stack{font-family:var(--mono);font-size:0.75rem;color:var(--faint);margin:10px 0 0;line-height:1.6;max-width:52ch}
+  .spec__body{padding-top:18px}
+  .spec__body>p:first-child{margin-top:0}
+  .spec__body p{margin:0 0 1em;max-width:66ch;color:var(--ink)}
+  .spec__body p:last-child{margin-bottom:0}
+
+  .kv{margin:18px 0 0;padding:0;border-top:1px solid var(--line)}
+  .kv div{
+    display:grid;grid-template-columns:1fr;gap:2px 20px;
+    padding:10px 0;border-bottom:1px solid var(--line);
+  }
+  .kv dt{font-family:var(--mono);font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--faint)}
+  .kv dd{margin:0;font-family:var(--mono);font-size:0.9375rem;font-weight:500;font-variant-numeric:tabular-nums}
+  .kv dd small{font-family:var(--sans);font-size:0.8125rem;font-weight:400;color:var(--muted);display:block;margin-top:2px}
+
+  .bullets{list-style:none;margin:18px 0 0;padding:0;max-width:66ch}
+  .bullets li{position:relative;padding-left:24px;margin-bottom:12px;color:var(--muted)}
+  .bullets li:last-child{margin-bottom:0}
+  .bullets li::before{
+    content:"";position:absolute;left:0;top:0.6em;width:10px;height:2px;background:var(--blue-line);
+  }
+  .bullets b{color:var(--ink);font-weight:600}
+
+  .repo{
+    display:inline-block;margin-top:16px;font-family:var(--mono);font-size:0.8125rem;
+    text-decoration:none;padding:7px 12px;border:1px solid var(--blue-line);background:var(--blue-soft);
+    border-radius:var(--r);color:var(--blue);
+    transition:transform 160ms ease,background-color 160ms ease;
+  }
+  .repo:hover{transform:translateY(-2px);background:#E2EAFD}
+
+  /* ---- skills ---- */
+
+  .skills{display:grid;grid-template-columns:1fr;gap:var(--gap)}
+  .skills h3{
+    font-family:var(--mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--blue);margin:0 0 12px;
+  }
+  .skills p{margin:0;font-size:0.9688rem;line-height:1.6;color:var(--muted)}
+  .skills p b{color:var(--ink);font-weight:500}
+
+  /* ---- background ---- */
+
+  .bg{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+  .bg article{padding:clamp(16px,2.2vw,26px);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr;gap:6px var(--gap)}
+  .bg article:first-child{border-top:0}
+  .bg h3{font-size:1.0625rem;font-weight:600;letter-spacing:-0.014em;margin:0;max-width:30ch}
+  .bg p{margin:0;color:var(--muted);font-size:0.9688rem;max-width:64ch}
+  .bg .when{font-family:var(--mono);font-size:0.75rem;color:var(--faint);letter-spacing:0.04em}
+
+  /* ---- contact ---- */
+
+  .contact{
+    margin-top:var(--sect);
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:clamp(24px,3.6vw,48px);
+  }
+  .contact h2{font-size:clamp(1.5rem,1.15rem + 1.5vw,2.25rem);font-weight:700;letter-spacing:-0.032em;margin:8px 0 0}
+  .contact p.blurb{color:var(--muted);max-width:56ch;margin:12px 0 0}
+  .contact-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:clamp(20px,2.6vw,30px)}
+  .contact-grid a{
+    display:block;text-decoration:none;color:var(--ink);
+    border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:#FBFCFE;
+    font-family:var(--mono);font-size:0.9375rem;word-break:break-word;
+    transition:transform 170ms ease,border-color 170ms ease,color 170ms ease;
+  }
+  .contact-grid a:hover{transform:translateY(-2px);border-color:var(--blue);color:var(--blue)}
+  .contact-grid span{display:block;font-size:0.6875rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+
+  footer{padding:clamp(30px,4vw,52px) 0 clamp(40px,6vw,72px)}
+  footer p{margin:0;font-family:var(--mono);font-size:0.75rem;line-height:1.7;color:var(--faint);max-width:80ch}
+
+  /* ---- motion ---- */
+
+  .js .reveal{opacity:0;transform:translateY(14px)}
+  .js .reveal.is-in{
+    opacity:1;transform:translateY(0);
+    transition:opacity 560ms cubic-bezier(0.16,1,0.3,1),transform 560ms cubic-bezier(0.16,1,0.3,1);
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important}
+    .js .reveal{opacity:1;transform:none}
+  }
+
+  /* ---- breakpoints ---- */
+
+  @media (min-width:640px){
+    .meta__row{grid-template-columns:130px minmax(0,1fr)}
+    .contact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .branch li{grid-template-columns:150px minmax(0,1fr);align-items:start}
+    .kv div{grid-template-columns:230px minmax(0,1fr)}
+    .bg article{grid-template-columns:minmax(0,1fr) 150px}
+    .bg .when{text-align:right}
+  }
+
+  @media (min-width:900px){
+    .sect__head{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end}
+    .sect__head p.blurb{margin-top:0}
+    .abstract{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}
+    .ctrl{grid-template-columns:minmax(0,1fr) minmax(230px,320px)}
+    .ctrl .note{transform:translateY(-8px)}
+    .spec__head{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+    .skills{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .contact-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  }
+
+  @media (min-width:1180px){
+    .controls-min{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .controls-min article{border-top:1px solid var(--line)}
+    .controls-min article:nth-child(2){border-top:0}
+    .controls-min article:nth-child(odd){border-right:1px solid var(--line)}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="wrap masthead">
+  <div class="doc">
+    <div class="doc__bar">
+      <p class="tag">Engineering profile / Tony Huang</p>
+      <span class="chip chip--info">Sydney, NSW</span>
+    </div>
+
+    <div class="doc__body">
+      <p class="tag">AI and Automation Engineer, Data and Analytics, Sydney</p>
+      <h1>Tony Huang</h1>
+      <p class="tagline">Most engineers show you what they built. I will also show you <em>how I stopped it going wrong.</em></p>
+
+      <dl class="meta">
+        <div class="meta__row">
+          <dt>Role</dt>
+          <dd>AI and Automation Lead, VPI Group (Vision Property Investment). Four days per week on site.</dd>
+        </div>
+        <div class="meta__row meta__row--rights">
+          <dt>Work rights</dt>
+          <dd>Full Australian working rights. Temporary Graduate visa (subclass 485), valid to 2028. No employer sponsorship required.</dd>
+        </div>
+        <div class="meta__row">
+          <dt>Contact</dt>
+          <dd>
+            <ul class="links">
+              <li><a href="mailto:jiayuhuang0722@gmail.com">jiayuhuang0722@gmail.com</a></li>
+              <li><a href="tel:+61426856188">+61 426 856 188</a></li>
+              <li><a href="https://github.com/Heatescape" rel="noopener">github.com/Heatescape</a></li>
+              <li><a href="https://linkedin.com/in/tony-huang-211757237" rel="noopener">linkedin.com/in/tony-huang-211757237</a></li>
+            </ul>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- 00 ABSTRACT -->
+  <section class="wrap sect" aria-labelledby="s-abstract">
+    <div class="sect__head reveal">
+      <div>
+        <p class="tag">Section 00</p>
+        <h2 id="s-abstract">Abstract</h2>
+      </div>
+      <p class="blurb">What I do, in plain English, before any of the diagrams.</p>
+    </div>
+
+    <div class="abstract reveal">
+      <div class="card">
+        <p>I am the internal AI and automation lead at a Sydney property investment group, with a Master of Information Technology (Data Analytics) from UTS. For three years I have been translating high friction manual business processes into automated systems, and since early 2026 I have been designing and delivering production generative AI applications end to end: scoping with non technical stakeholders, solution design, build, production hardening and user adoption.</p>
+        <p>I work alongside sales, accounting and property management. I find the workflows costing the business time or accuracy, gather requirements from non technical staff, design the solution, build it, and own it through to production and adoption. I was appointed the company's first internal AI and automation lead after independently delivering its first production generative AI tool.</p>
+      </div>
+      <div class="note">
+        <b>Why this page is ordered this way</b>
+        My flagship system writes to a public property portal that customers read. A wrong write is not a failed test, it is a wrong price in front of a buyer. So the controls come first on this page, because that is the order they came in when I built it.
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 CONTROLS -->
+  <section class="wrap sect" aria-labelledby="s-controls">
+    <div class="sect__head reveal">
+      <div>
+        <p class="tag">Section 01</p>
+        <h2 id="s-controls">The guardrails are the portfolio</h2>
+      </div>
+      <p class="blurb">Four controls I designed and built. Each one exists because of a specific way the system could have hurt the business.</p>
+    </div>
+
+    <div class="controls">
+
+      <article class="ctrl ctrl--audit reveal">
+        <div>
+          <p class="ctrl__id">
+            <span class="tag">CTRL-01</span>
+            <span class="chip chip--info">Traceable</span>
+          </p>
+          <h3>Audit logging on every write to live data</h3>
+          <p>Every write to live data is recorded to an audit log and remains traceable after the fact. If something appears on the public portal, there is a record of what put it there and when.</p>
+        </div>
+        <div class="note">
+          <b>Design note</b>
+          Traceability is worth nothing if it only covers the happy path. The log sits on the write itself, not on the intent to write.
+        </div>
+      </article>
+
+      <article class="ctrl ctrl--route reveal">
+        <div>
+          <p class="ctrl__id">
+            <span class="tag">CTRL-02</span>
+            <span class="chip chip--pass">Auto</span>
+            <span class="chip chip--review">Review queue</span>
+          </p>
+          <h3>Risk based approval routing</h3>
+          <p>Actions are routed by risk. Low risk publishes automatically. High risk goes to a human review queue, surfaced in the dashboard for a person to accept or reject.</p>
+        </div>
+        <div class="note">
+          <b>Design note</b>
+          Human in the loop on everything means people rubber stamp. Routing by risk keeps human attention where it changes the outcome.
+        </div>
+      </article>
+
+      <article class="ctrl ctrl--race reveal">
+        <div>
+          <p class="ctrl__id">
+            <span class="tag">CTRL-03</span>
+            <span class="chip chip--block">Blocked a real incident</span>
+          </p>
+          <h3>A concurrency guard that re validates the source before writing</h3>
+          <p>The guard re validates the source immediately before the write, so an approval given against a stale preview is rejected rather than published.</p>
+          <p>That control caught and blocked a real stale write incident in production.</p>
+        </div>
+        <div class="note note--flag">
+          <b>Incident, blocked</b>
+          A human approved a change against a preview that was no longer current. The pre write check rejected it. Nothing reached the public portal.
+        </div>
+      </article>
+
+      <article class="ctrl ctrl--priv reveal">
+        <div>
+          <p class="ctrl__id">
+            <span class="tag">CTRL-04</span>
+            <span class="chip chip--pass">Privilege separation</span>
+          </p>
+          <h3>The language model is kept out of the permission layer</h3>
+          <p>In the CRM assistant, the identity used for a query is set by the authenticated session and can never be supplied by the model, so it cannot query on behalf of another user.</p>
+        </div>
+        <div class="note">
+          <b>Design note</b>
+          A model that can name its own caller is a model that can be talked into naming someone else. The identity never enters the prompt surface.
+        </div>
+      </article>
+
+    </div>
+
+    <div class="controls-min reveal">
+      <article>
+        <span class="chip chip--info">Confidentiality</span>
+        <h3>Sensitive commission data filtering</h3>
+        <p>Confidential commission figures are kept off the public portal, alongside versioned compliance archiving of every published price list.</p>
+      </article>
+      <article>
+        <span class="chip chip--wip">Bounded agency</span>
+        <h3>Agent loop capped, every tool call traced</h3>
+        <p>The agent loop is bounded to a maximum of 6 tool calls. Every tool call is traced with its arguments and a result summary for after the fact review.</p>
+      </article>
+      <article>
+        <span class="chip chip--wip">Anti hallucination</span>
+        <h3>A faithfulness constraint in the data contract</h3>
+        <p>The assistant must state when no option matches the buyer's budget before listing near misses, rather than relying on prompt instructions to keep it honest.</p>
+      </article>
+      <article>
+        <span class="chip chip--pass">Regression testing</span>
+        <h3>206 automated test files on the portal platform</h3>
+        <p>Including regression suites built from real sample PDFs, so support for a new developer format cannot quietly break an old one.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 02 WRITE PATH -->
+  <section class="wrap sect" aria-labelledby="s-path">
+    <div class="sect__head reveal">
+      <div>
+        <p class="tag">Section 02</p>
+        <h2 id="s-path">The write path</h2>
+      </div>
+      <p class="blurb">How a developer price list becomes a correct row on a public property portal, and where it gets stopped.</p>
+    </div>
+
+    <div class="card reveal">
+      <ol class="rail">
+        <li>
+          <span class="rail__step">Stage 1 / Collect</span>
+          <span class="rail__title">Ingest from heterogeneous channels</span>
+          <p>Developer price lists and floor plans arrive through Dropbox, Box, Gmail and custom web portals. Roughly 30 developer file formats.</p>
+        </li>
+        <li class="is-key">
+          <span class="rail__step">Stage 2 / Extract</span>
+          <span class="rail__title">Hybrid rule based and LLM extraction</span>
+          <p>80 to 90 column name variations handled, with a Gemini backed fallback for PDFs that rule based parsing cannot read. Property type is auto detected, apartment, townhouse, house and land, land only, and type specific field mapping is applied.</p>
+        </li>
+        <li>
+          <span class="rail__step">Stage 3 / Match</span>
+          <span class="rail__title">Fuzzy matching and record linkage</span>
+          <p>Records are matched against existing stock. Ambiguous matches are the dangerous ones, so they are resolved explicitly rather than guessed.</p>
+        </li>
+        <li class="is-key">
+          <span class="rail__step">Stage 4 / Route by risk</span>
+          <span class="rail__title">Risk based approval routing</span>
+          <ul class="branch">
+            <li>
+              <span class="chip chip--pass">Low risk</span>
+              <span class="txt">Publishes automatically, and is still written to the audit log.</span>
+            </li>
+            <li>
+              <span class="chip chip--review">High risk</span>
+              <span class="txt">Enters the human review queue in the dashboard and waits for a person.</span>
+            </li>
+          </ul>
+        </li>
+        <li class="is-stop">
+          <span class="rail__step">Stage 4b / Pre write check</span>
+          <span class="rail__title">Concurrency guard re validates the source</span>
+          <p>An approval given against a stale preview is rejected rather than published. This control caught and blocked a real stale write incident in production.</p>
+        </li>
+        <li>
+          <span class="rail__step">Stage 5 / Publish and notify</span>
+          <span class="rail__title">Write, log, archive, tell someone</span>
+          <p>The write is recorded to the audit log and remains traceable after the fact. Commission figures are filtered out of anything public, and every published price list is archived with a version for compliance.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 03 SYSTEMS -->
+  <section class="wrap sect" aria-labelledby="s-systems">
+    <div class="sect__head reveal">
+      <div>
+        <p class="tag">Section 03</p>
+        <h2 id="s-systems">Systems</h2>
+      </div>
+      <p class="blurb">Three systems built end to end at one employer: VPI Group (Vision Property Investment).</p>
+    </div>
+
+    <article class="spec reveal">
+      <div class="spec__head">
+        <div>
+          <p class="tag">SPEC-01</p>
+          <h3>Portal update automation platform</h3>
+        </div>
+        <div>
+          <span class="chip chip--pass">In production</span>
+          <p class="spec__stack">Python / FastAPI / Azure SQL / Azure Blob Storage / Dropbox API / scheduled unattended operation / web dashboard</p>
+        </div>
+      </div>
+      <div class="spec__body">
+        <p>A five stage ETL pipeline, collect, extract, match, publish, notify, that ingests developer price lists and floor plans from heterogeneous channels and publishes to the company's live public property portal. The dashboard gives staff manual control, live monitoring and human review.</p>
+
+        <ul class="bullets">
+          <li><b>Multi source data reconciliation.</b> I reconciled pricing and availability across four disconnected sources: the authoritative price list, marketing floorplates, archived files and the live public portal. It surfaced data quality problems nobody had reported, including seven units carrying the price of a different building, and sold stock still publicly listed. The drift came from system handoffs, not careless data entry, so the fix was a scheduled reconciliation rather than a one off cleanup.</li>
+          <li><b>Verified against reality, not a dry run.</b> The first source taken fully to production was confirmed record by record against the live portal.</li>
+        </ul>
+
+        <dl class="kv">
+          <div><dt>Records landed</dt><dd>217<small>Zero errors, first source taken fully to production</small></dd></div>
+          <div><dt>Ambiguous order matches</dt><dd>27<small>Zero cross contamination</small></dd></div>
+          <div><dt>Floorplan automation</dt><dd>17 of 17<small>One project complete, and 62 units on another</small></dd></div>
+          <div><dt>Automated test files</dt><dd>206<small>Including regression suites built from real sample PDFs</small></dd></div>
+          <div><dt>Commits</dt><dd>775<small>On the portal platform</small></dd></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="spec reveal">
+      <div class="spec__head">
+        <div>
+          <p class="tag">SPEC-02</p>
+          <h3>Agentic AI voice assistant, in the company CRM</h3>
+        </div>
+        <div>
+          <span class="chip chip--wip">Feature complete, pending compliance sign off</span>
+          <p class="spec__stack">ASP.NET Core 8 / .NET MAUI (Android) / Google Gemini 2.5 Flash / Azure SQL / JWT authentication</p>
+        </div>
+      </div>
+      <div class="spec__body">
+        <p>Sales agents speak or type a question in English, Chinese or a mix of both, and the assistant either answers it or files the follow up note against the client record. It covers property search, affordability and loan calculations, and client log updates in one chat surface on the mobile app, replacing thumb typing in the field and switching between five separate screens. It is feature complete, pending compliance sign off and production authentication cutover.</p>
+
+        <ul class="bullets">
+          <li><b>A tool calling agent, not similarity search.</b> Structured retrieval through tool calls rather than similarity search. For a sales tool quoting prices and availability, similarity is the wrong primitive. The data has to be exact and live, so the model picks the tool and fills the parameters, and SQL does the rest.</li>
+          <li><b>Intent recognition and slot filling.</b> The language model turns natural language into typed search criteria, then selects from roughly 12 deterministic tools that query Azure SQL. The model never generates a figure itself. Speech to text runs multimodal through Gemini with schema constrained output.</li>
+          <li><b>Bilingual understanding.</b> English, Chinese, or a mix of both inside the same sentence.</li>
+        </ul>
+
+        <dl class="kv">
+          <div><dt>Deterministic tools</dt><dd>roughly 12<small>Each one queries Azure SQL directly</small></dd></div>
+          <div><dt>Agent loop bound</dt><dd>6 tool calls<small>Hard cap, every call traced with arguments and a result summary</small></dd></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="spec reveal">
+      <div class="spec__head">
+        <div>
+          <p class="tag">SPEC-03</p>
+          <h3>Auto Tenant Check, and the AI market analysis assistant</h3>
+        </div>
+        <div>
+          <span class="chip chip--pass">In production, adopted daily</span>
+          <p class="spec__stack">Playwright / Vision OCR / GraphQL API integration / Python / LLM report generation / installable Windows application</p>
+        </div>
+      </div>
+      <div class="spec__body">
+        <p><b>Auto Tenant Check</b> is a multi stage tenant screening tool integrating email intake, browser automation with Playwright, Vision OCR and credit bureau data. I diagnosed an OCR accuracy ceiling on watermarked documents, then reverse engineered the upstream GraphQL API to lift field extraction accuracy to near exact. It ships as an installable Windows application with over 230 automated tests.</p>
+        <p><b>The AI market analysis assistant</b> is an LLM powered report generator that lets non technical staff produce polished property market reports in minutes instead of hours. I gathered requirements from the sales team, iterated on output quality from their feedback, and it is now used voluntarily every day. Voluntary daily use is the metric I care about most, because internal tools usually die quietly.</p>
+        <a class="repo" href="https://github.com/Heatescape/cma_editor" rel="noopener">github.com/Heatescape/cma_editor</a>
+      </div>
+    </article>
+  </section>
+
+  <!-- 04 SKILLS -->
+  <section class="wrap sect" aria-labelledby="s-skills">
+    <div class="sect__head reveal">
+      <div>
+        <p class="tag">Section 04</p>
+        <h2 id="s-skills">Skills</h2>
+      </div>
+      <p class="blurb">Named for what they actually are. If it is on this list I have used it in something real.</p>
+    </div>
+
+    <div class="skills reveal">
+      <div class="card">
+        <h3>Artificial intelligence and LLM</h3>
+        <p>Generative AI, large language models, agentic AI, tool calling and function calling, prompt engineering, intent recognition and slot filling, LLM document extraction, multimodal speech to text, structured output with JSON schema, anti hallucination guardrails, OpenAI GPT-4o and Vision, Anthropic Claude, Google Gemini, GitHub Copilot.</p>
+      </div>
+      <div class="card">
+        <h3>Data and analytics</h3>
+        <p>Python (pandas, NumPy), SQL, Azure SQL, ETL pipeline design, data reconciliation, data quality and completeness scoring, fuzzy matching and record linkage, data validation, Excel.</p>
+      </div>
+      <div class="card">
+        <h3>Governance and reliability</h3>
+        <p>Human in the loop approval workflows, audit logging and traceability, risk based approval routing, role based access control, idempotent operations, concurrency safety, regression testing, sensitive data filtering.</p>
+      </div>
+      <div class="card">
+        <h3>Automation and delivery</h3>
+        <p>Business process analysis, requirements gathering, stakeholder engagement, end to end delivery, workflow automation, browser automation with Playwright, Optical Character Recognition, scheduled unattended operation, user training and documentation.</p>
+      </div>
+      <div class="card">
+        <h3>Platforms and integration</h3>
+        <p>REST and GraphQL API integration, OAuth2, JWT authentication, FastAPI, ASP.NET Core, .NET MAUI, Azure Blob Storage, Dropbox API, SQLite, Git.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 BACKGROUND -->
+  <section class="wrap sect" aria-labelledby="s-bg">
+    <div class="sect__head reveal">
+      <div>
+        <p class="tag">Section 05</p>
+        <h2 id="s-bg">Background</h2>
+      </div>
+      <p class="blurb">The generative AI work sits on two and a half years of unglamorous process automation.</p>
+    </div>
+
+    <div class="bg reveal">
+      <article>
+        <div>
+          <h3>VPI Group (Vision Property Investment), AI and Automation Lead</h3>
+          <p>Four days per week on site, alongside a Master of Information Technology.</p>
+        </div>
+        <p class="when">May 2023 to present</p>
+      </article>
+      <article>
+        <div>
+          <h3>Excel, VBA and Python automation</h3>
+          <p>Before the generative AI work, I spent two and a half years automating the recurring reporting and data maintenance load across sales, accounting and property management. The weekly price list update process went from over 40 hours of manual work per week to under five. This is where the process automation instinct and the data validation discipline came from.</p>
+        </div>
+        <p class="when">2023 to 2025</p>
+      </article>
+      <article>
+        <div>
+          <h3>Master of Information Technology (Data Analytics), University of Technology Sydney</h3>
+          <p>Bachelor of Information Technology (Data Analytics), University of Technology Sydney, 2024.</p>
+        </div>
+        <p class="when">Graduated July 2026</p>
+      </article>
+      <article>
+        <div>
+          <h3>Building Permit Data Analysis, academic project</h3>
+          <p>Cleaned and analysed a 198,900 record San Francisco building permits dataset with 43 attributes. Imputed missing values using median and mode statistics alongside a linear regression cost model, engineered derived date features to measure permit approval cycle times, and visualised permit type composition, seasonal application trends and variance between estimated and final construction costs. Tools: pandas, NumPy, scikit-learn, Matplotlib, Seaborn.</p>
+        </div>
+        <p class="when">Python, individual</p>
+      </article>
+      <article>
+        <div>
+          <h3>Certifications</h3>
+          <p>Google Data Analytics Certificate. Google Finance Data Analyst Certificate.</p>
+        </div>
+        <p class="when">Google</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 06 CONTACT -->
+  <div class="wrap">
+    <section class="contact reveal" aria-labelledby="s-contact">
+      <p class="tag">Section 06</p>
+      <h2 id="s-contact">Get in touch</h2>
+      <p class="blurb">If you have a process that is quietly costing your team a day a week, or a system that writes to data your customers can see, that is the conversation I like having.</p>
+      <div class="contact-grid">
+        <a href="mailto:jiayuhuang0722@gmail.com"><span>Email</span>jiayuhuang0722@gmail.com</a>
+        <a href="tel:+61426856188"><span>Phone</span>+61 426 856 188</a>
+        <a href="https://github.com/Heatescape" rel="noopener"><span>GitHub</span>github.com/Heatescape</a>
+        <a href="https://linkedin.com/in/tony-huang-211757237" rel="noopener"><span>LinkedIn</span>linkedin.com/in/tony-huang-211757237</a>
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<footer class="wrap">
+  <p>Tony Huang, Sydney NSW, Australia. Full Australian working rights, Temporary Graduate visa (subclass 485) valid to 2028. No employer sponsorship required. Referees available on request.</p>
+</footer>
+
+<script>
+  document.documentElement.classList.add('js');
+  (function(){
+    var nodes = document.querySelectorAll('.reveal');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      for (var i = 0; i < nodes.length; i++) nodes[i].classList.add('is-in');
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+    for (var j = 0; j < nodes.length; j++) io.observe(nodes[j]);
+  })();
+</script>
+</body>
+</html>

@@ -1,176 +1,753 @@
-<!DOCTYPE HTML>
-<!--
-	Story by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Tony Huang Portfolio</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
-		<div style="border: 0px solid; width: 1600px; height: 500px;margin: 0 auto">
-		<!-- Wrapper -->
-			<div id="wrapper" class="divided">
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tony Huang, AI and Automation Engineer in Sydney</title>
+<meta name="description" content="I build the automation that keeps a property group's public data correct, and the controls that stop it going wrong. Sydney based, full Australian working rights.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBFAF7;
+    --ink:#16130F;
+    --muted:#56504B;
+    --rule:#D8D3CA;
+    --rule-strong:#16130F;
+    --accent:#C43A1E;
+    --second:#1F4D5C;
 
-				<!-- One -->
-					<section class="banner style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right">
-						<div class="content">
-							<h1>Tony Huang Portfolio
-							</h1>
-							<p class="major">This is my jurney of data analysis</p>
-							<ul class="actions stacked">
-								<li><a href="#first" class="button big wide smooth-scroll-middle">Get Started</a></li>
-							</ul>
-						</div>
-						<div class="image">
-							<img src="images\Data-analysis.jpeg.optimal.jpeg" alt="" />
-						</div>
-					</section>
+    --sans:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --serif:"Newsreader",Georgia,"Times New Roman",serif;
 
-				<!-- Two -->
-					<section class="spotlight style1 orient-left content-align-left image-position-center onscroll-image-fade-in" id="first">
-						<div class="content">
-							<h2>Bellabeat Project</h2>
-							<p>A data analyse report on strategies to boost the bellabeat market</p>
-							<ul class="actions stacked">
-								<li><a href="https://github.com/Heatescape/PortfolioProjects/tree/main/Bellabeat" class="button">View Project</a></li>
-							</ul>
-						</div>
-						<div class="image">
-							<img src="images/images.png" alt="" />
-						</div>
-					</section>
+    --gap:clamp(20px,3vw,44px);
+    --pad:clamp(20px,5vw,84px);
+    --stack-s:clamp(28px,4vw,52px);
+    --stack-m:clamp(52px,7vw,104px);
+    --stack-l:clamp(72px,10vw,152px);
 
-				<!-- Three -->
-					<section class="spotlight style1 orient-right content-align-left image-position-center onscroll-image-fade-in" id="first">
-						<div class="content">
-							<h2>Covid-19 Exploration</h2>
-							<p>Using SQL server to explore global Covid-19 data.</p>
-							<ul class="actions stacked">
-								<li><a href="https://github.com/Heatescape/PortfolioProjects/tree/main/Covid-19" class="button">View Project</a></li>
-							</ul>
-						</div>
-						<div class="image">
-							<img src="images\COVID-19-web-image_1920x1080-2-999x562.jpg" alt="" />
-						</div>
-					</section>
+    --body:clamp(1.0625rem,0.98rem + 0.35vw,1.1875rem);
+    --lede:clamp(1.25rem,1.05rem + 0.85vw,1.75rem);
+    --h2:clamp(1.5rem,1.1rem + 1.6vw,2.5rem);
+    --h3:clamp(1.25rem,1.05rem + 0.85vw,1.75rem);
+    --label:0.6875rem;
+  }
 
-				<!-- Four -->
-					<section class="spotlight style1 orient-left content-align-left image-position-center onscroll-image-fade-in">
-						<div class="content">
-							<h2>Covid-19 Dashboard</h2>
-							<p>Using Tableau to visualise the exploration of Covid-19 data.</p>
-							<ul class="actions stacked">
-								<li><a href="https://public.tableau.com/app/profile/jiayu.huang3199/viz/CovidDashboard_16677180818540/Dashboard1?publish=yes" class="button">View Project</a></li>
-							</ul>
-						</div>
-						<div class="image">
-							<img src="images\Capture.PNG" alt="" />
-						</div>
-					</section>
+  *,*::before,*::after{box-sizing:border-box}
 
-				<!-- Five -->
-					<section class="spotlight style1 orient-right content-align-left image-position-center onscroll-image-fade-in">
-						<div class="content">
-							<h2>Movie Industry Exploration</h2>
-							<p>Using python to explore movie industry data, including data cleaning, correlation.</p>
-							<ul class="actions stacked">
-								<li><a href="https://github.com/Heatescape/PortfolioProjects/blob/main/MovieIndustry/MovieIndustry.ipynb" class="button">View Project</a></li>
-							</ul>
-						</div>
-						<div class="image">
-							<img src="images\MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_.jpg" alt="" />
-						</div>
-					</section>
-				
-				<!-- Six -->
-				<section class="spotlight style1 orient-left content-align-left image-position-center onscroll-image-fade-in">
-					<div class="content">
-						<h2>Nashville Housing Exploration</h2>
-						<p>Using SQL server to implement data cleaning with Nashville house data, explore house data, create tables for visulisation.</p>
-						<ul class="actions stacked">
-							<li><a href="https://github.com/Heatescape/PortfolioProjects/blob/main/NashvilleHousing/SQL_Query/NashvilleHousingDataCleaning.sql" class="button">View Project</a></li>
-						</ul>
-					</div>
-					<div class="image">
-						<img src="images\FT_21.08.17_BigHousesSmallHouses_feature.webp" alt="" />
-					</div>
-				</section>
+  html{-webkit-text-size-adjust:100%}
 
-				<!-- Seven -->
-				<section class="spotlight style1 orient-right content-align-left image-position-center onscroll-image-fade-in">
-					<div class="content">
-						<h2>Nashville Housing Dashboard</h2>
-						<p>Using tableau to visualise the trends and insights of Nashville housing dataset.</p>
-						<ul class="actions stacked">
-							<li><a href="https://public.tableau.com/app/profile/jiayu.huang3199/viz/NashvilleHousingDashboard_16677868405740/Dashboard1?publish=yes" class="button">View Project</a></li>
-						</ul>
-					</div>
-					<div class="image">
-						<img src="images\NashvilleTableau.PNG" alt="" />
-					</div>
-				</section>
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--serif);
+    font-size:var(--body);
+    line-height:1.55;
+    font-optical-sizing:auto;
+    overflow-x:hidden;
+  }
 
-				<!-- Eight -->
-				<section class="spotlight style1 orient-left content-align-left image-position-center onscroll-image-fade-in">
-					<div class="content">
-						<h2>Amazon Web Scraper</h2>
-						<p>Using python to create a price checker running in the background.</p>
-						<ul class="actions stacked">
-							<li><a href="https://github.com/Heatescape/PortfolioProjects/blob/main/AmazonWebScraper/Amazon%20Phone%20Web%20Scraper.ipynb" class="button">View Project</a></li>
-						</ul>
-					</div>
-					<div class="image">
-						<img src="images\acastro_190920_1777_amazon_0002.0.jpg" alt="" />
-					</div>
-				</section>
+  ::selection{background:var(--accent);color:var(--paper)}
 
+  .wrap{max-width:1400px;margin:0 auto;padding:0 var(--pad)}
 
+  a{color:inherit}
 
-				<section class="split contact">
-					<section class="alt">
-						<h3>Address</h3>
-						<p>Merrylands, NSW, 2160</p>
-					</section>
-					<section>
-						<h3>Phone</h3>
-						<p>(61) 426856188</p>
-					</section>
-					<section>
-						<h3>Email</h3>
-						<p>JiayuHuang0722@gmail.com</p>
-					</section>
-				</section>
+  a:focus-visible,
+  button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:4px;
+    border-radius:1px;
+  }
 
+  .skip{
+    position:absolute;left:-9999px;top:0;
+    background:var(--ink);color:var(--paper);
+    padding:12px 18px;font-family:var(--sans);font-size:0.875rem;z-index:50;
+  }
+  .skip:focus{left:var(--pad);top:12px}
 
+  /* ---------- shared typographic devices ---------- */
 
-				<!-- Footer -->
-					<footer class="wrapper style1 align-center">
-						<div class="inner">
-							<ul class="icons">
-								<li><a href="https://www.linkedin.com/in/jiayu-huang-211757237/" class="icon brands style2 fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-								<li><a href="#" class="icon style2 fa-envelope"><span class="label">Email</span></a></li>
-								<li><a href="https://github.com/Heatescape" class="icon brands style2 fa-github"><span class="label">GitHub</span></a></li>
-							</ul>
-							<p>&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
-						</div>
-					</footer>
+  .label{
+    font-family:var(--sans);
+    font-size:var(--label);
+    font-weight:600;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0;
+  }
+  .label--accent{color:var(--accent)}
+  .label--second{color:var(--second)}
 
-			</div>
+  .rule-top{border-top:1px solid var(--rule-strong)}
+  .rule-hair{border-top:1px solid var(--rule)}
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-		</div>
-	</body>
+  /* ---------- masthead ---------- */
+
+  .masthead{
+    padding-top:clamp(28px,5vw,64px);
+    padding-bottom:clamp(28px,4vw,56px);
+  }
+
+  .masthead__kicker{
+    display:flex;flex-wrap:wrap;gap:8px var(--gap);
+    align-items:baseline;justify-content:space-between;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--rule-strong);
+  }
+
+  h1{
+    font-family:var(--sans);
+    font-weight:800;
+    font-size:clamp(1.8rem,7.25vw,5.75rem);
+    line-height:0.82;
+    letter-spacing:-0.045em;
+    margin:clamp(18px,2.6vw,34px) 0 0;
+    text-transform:uppercase;
+  }
+  h1 .l2{
+    display:block;
+    margin-left:clamp(0px,9vw,15%);
+    color:var(--accent);
+  }
+
+  /* hero thesis: second only to the name */
+  .thesis{
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:clamp(1.375rem,0.9rem + 2.5vw,2.75rem);
+    line-height:1.08;
+    letter-spacing:-0.032em;
+    margin:clamp(18px,2.4vw,30px) 0 0;
+    max-width:26ch;
+    text-wrap:balance;
+  }
+  .thesis span{color:var(--accent)}
+
+  .masthead__role{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:6px var(--gap);
+    margin-top:clamp(18px,2.4vw,30px);
+    padding-top:14px;
+    border-top:1px solid var(--rule-strong);
+    font-family:var(--sans);
+  }
+  .masthead__role p{margin:0}
+  .masthead__role .role{
+    font-size:clamp(1.0625rem,0.9rem + 0.7vw,1.5rem);
+    font-weight:600;letter-spacing:-0.01em;
+  }
+  .masthead__role .where{color:var(--muted);font-size:0.9375rem}
+
+  .employer{
+    font-family:var(--sans);
+    font-size:0.9375rem;
+    letter-spacing:0.01em;
+    color:var(--muted);
+    margin:10px 0 0;
+  }
+
+  /* work rights: the strip that has to be seen */
+  .rights{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:6px 22px;
+    align-items:start;
+    margin-top:clamp(20px,2.6vw,34px);
+    padding:16px 0 16px 20px;
+    border-left:5px solid var(--second);
+    background:linear-gradient(90deg,rgba(31,77,92,0.07),rgba(31,77,92,0));
+  }
+  .rights p{
+    margin:0;
+    font-family:var(--sans);
+    font-weight:500;
+    font-size:clamp(0.9375rem,0.86rem + 0.35vw,1.125rem);
+    line-height:1.4;
+    max-width:62ch;
+  }
+  .rights .label{padding-top:4px;white-space:nowrap}
+
+  .contacts{
+    display:flex;flex-wrap:wrap;
+    gap:4px clamp(16px,2.4vw,34px);
+    margin-top:clamp(22px,2.8vw,36px);
+    padding:0;list-style:none;
+    font-family:var(--sans);
+    font-size:0.9375rem;
+  }
+  .contacts a{
+    display:inline-block;
+    text-decoration:none;
+    padding:6px 0;
+    border-bottom:1px solid var(--rule);
+    transition:border-color 180ms ease,transform 180ms ease,color 180ms ease;
+  }
+  .contacts a:hover{color:var(--accent);border-bottom-color:var(--accent);transform:translateY(-2px)}
+
+  /* ---------- section grid ---------- */
+
+  section{
+    padding-top:clamp(26px,3.4vw,46px);
+    padding-bottom:var(--stack-m);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:clamp(18px,2.4vw,30px) var(--gap);
+  }
+
+  .grid__head{position:relative}
+  .grid__head h2{
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:var(--h2);
+    line-height:1.02;
+    letter-spacing:-0.03em;
+    margin:6px 0 0;
+    text-wrap:balance;
+  }
+  .grid__head .num{
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:var(--label);
+    letter-spacing:0.16em;
+    color:var(--accent);
+  }
+
+  .prose p{margin:0 0 1em;max-width:66ch}
+  .prose p:last-child{margin-bottom:0}
+  .lede{
+    font-size:var(--lede);
+    line-height:1.34;
+    letter-spacing:-0.012em;
+    max-width:30ch;
+  }
+
+  /* ---------- work items ---------- */
+
+  .work{display:grid;gap:0}
+
+  .item{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:clamp(14px,2vw,26px) var(--gap);
+    padding:clamp(26px,3.4vw,46px) 0;
+    border-top:1px solid var(--rule);
+  }
+  .item:first-child{border-top:1px solid var(--rule-strong)}
+
+  .item__index{
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:clamp(2rem,1.2rem + 2.4vw,3.75rem);
+    line-height:0.85;
+    letter-spacing:-0.04em;
+    color:var(--rule);
+  }
+  .item h3{
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:var(--h3);
+    line-height:1.12;
+    letter-spacing:-0.02em;
+    margin:0 0 10px;
+    text-wrap:balance;
+    max-width:24ch;
+  }
+  .item__status{
+    display:inline-block;
+    margin:0 0 4px;
+    padding-bottom:2px;
+    border-bottom:2px solid currentColor;
+  }
+  .item__stack{
+    font-family:var(--sans);
+    font-size:0.8125rem;
+    letter-spacing:0.01em;
+    color:var(--muted);
+    margin:12px 0 0;
+    max-width:44ch;
+  }
+
+  .item__body>*:first-child{margin-top:0}
+
+  .points{list-style:none;margin:1.35em 0 0;padding:0;max-width:66ch}
+  .points li{
+    position:relative;
+    padding:0 0 0 26px;
+    margin:0 0 0.9em;
+  }
+  .points li::before{
+    content:"";
+    position:absolute;left:0;top:0.62em;
+    width:14px;height:1px;background:var(--accent);
+  }
+  .points li:last-child{margin-bottom:0}
+  .points b{font-family:var(--sans);font-weight:600;font-size:0.94em;letter-spacing:-0.005em}
+
+  /* figures: numerals do the talking */
+  .figures{
+    margin:clamp(18px,2.4vw,30px) 0 0;
+    padding:0;
+    border-top:1px solid var(--rule-strong);
+  }
+  .figures div{
+    display:grid;
+    grid-template-columns:minmax(88px,auto) 1fr;
+    gap:4px 22px;
+    align-items:baseline;
+    padding:12px 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .figures dt{
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:clamp(1.375rem,1rem + 1.5vw,2.25rem);
+    line-height:1;
+    letter-spacing:-0.035em;
+    font-variant-numeric:tabular-nums;
+  }
+  .figures dd{margin:0;color:var(--muted);font-size:0.9375rem;line-height:1.4}
+
+  .repo{
+    display:inline-block;
+    margin-top:16px;
+    font-family:var(--sans);
+    font-size:0.875rem;
+    font-weight:600;
+    text-decoration:none;
+    border-bottom:2px solid var(--accent);
+    padding-bottom:2px;
+    transition:transform 180ms ease,color 180ms ease;
+  }
+  .repo:hover{color:var(--accent);transform:translateY(-2px)}
+
+  /* ---------- controls (how I ship safely) ---------- */
+
+  .controls{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:0;
+    border-top:1px solid var(--rule-strong);
+  }
+  .controls article{
+    padding:clamp(20px,2.4vw,30px) 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .controls h3{
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:1.0625rem;
+    letter-spacing:-0.01em;
+    margin:8px 0 8px;
+    max-width:30ch;
+  }
+  .controls p{margin:0;color:var(--muted);font-size:0.9688rem;max-width:56ch}
+
+  /* ---------- skills ---------- */
+
+  .skills{display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--rule-strong)}
+  .skills section,
+  .skills article{padding:clamp(18px,2.2vw,26px) 0;border-bottom:1px solid var(--rule)}
+  .skills h3{
+    font-family:var(--sans);font-weight:700;
+    font-size:0.8125rem;letter-spacing:0.12em;text-transform:uppercase;
+    margin:0 0 10px;color:var(--second);
+  }
+  .skills p{margin:0;font-size:1.0313rem;line-height:1.5;max-width:70ch}
+
+  /* ---------- background ---------- */
+
+  .bg-list{display:grid;gap:0;border-top:1px solid var(--rule-strong)}
+  .bg-list article{
+    display:grid;grid-template-columns:1fr;gap:6px var(--gap);
+    padding:clamp(18px,2.2vw,28px) 0;border-bottom:1px solid var(--rule);
+  }
+  .bg-list h3{
+    font-family:var(--sans);font-weight:600;font-size:1.0625rem;
+    letter-spacing:-0.01em;margin:0;max-width:26ch;
+  }
+  .bg-list p{margin:0;color:var(--muted);max-width:62ch;font-size:1.0313rem}
+  .bg-list .when{font-family:var(--sans);font-size:0.8125rem;color:var(--muted);letter-spacing:0.04em}
+
+  /* ---------- contact ---------- */
+
+  .contact-block{border-top:2px solid var(--rule-strong);padding-top:clamp(26px,3.4vw,44px)}
+  .contact-grid{
+    display:grid;grid-template-columns:1fr;gap:clamp(18px,2.4vw,30px) var(--gap);
+    margin-top:clamp(20px,2.6vw,32px);
+  }
+  .contact-grid a{
+    display:block;text-decoration:none;
+    font-family:var(--sans);font-weight:600;
+    font-size:clamp(1.0625rem,0.95rem + 0.5vw,1.375rem);
+    letter-spacing:-0.02em;
+    padding:14px 0;border-top:1px solid var(--rule);
+    word-break:break-word;
+    transition:transform 200ms ease,color 200ms ease,border-color 200ms ease;
+  }
+  .contact-grid a:hover{color:var(--accent);border-top-color:var(--accent);transform:translateX(6px)}
+  .contact-grid span{display:block;margin-bottom:6px}
+
+  footer{
+    padding:clamp(30px,4vw,56px) 0 clamp(40px,6vw,80px);
+    border-top:1px solid var(--rule);
+    margin-top:clamp(30px,4vw,56px);
+  }
+  footer p{margin:0;font-family:var(--sans);font-size:0.8125rem;color:var(--muted)}
+
+  /* ---------- motion ---------- */
+
+  .js .reveal{opacity:0;transform:translateY(14px)}
+  .js .reveal.is-in{
+    opacity:1;transform:translateY(0);
+    transition:opacity 620ms cubic-bezier(0.16,1,0.3,1),transform 620ms cubic-bezier(0.16,1,0.3,1);
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important}
+    .js .reveal{opacity:1;transform:none}
+  }
+
+  /* ---------- breakpoints ---------- */
+
+  @media (min-width:700px){
+    .masthead__role{grid-template-columns:minmax(0,1fr) auto;align-items:baseline}
+    .masthead__role .where{text-align:right}
+    .contact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .bg-list article{grid-template-columns:minmax(0,1fr) 150px}
+    .bg-list .when{text-align:right}
+  }
+
+  @media (min-width:1000px){
+    .grid{grid-template-columns:minmax(0,3fr) minmax(0,9fr)}
+    .item{grid-template-columns:minmax(0,3fr) minmax(0,9fr)}
+    .item__meta{grid-column:1}
+    .item__body{grid-column:2}
+    .controls{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--gap)}
+    .controls article{border-bottom:1px solid var(--rule)}
+    .skills{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--gap)}
+    .contact-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .figures div{grid-template-columns:minmax(150px,auto) 1fr}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="wrap masthead">
+  <div class="masthead__kicker">
+    <p class="label">Tony Huang, portfolio</p>
+    <p class="label label--accent">Sydney, New South Wales</p>
+  </div>
+
+  <h1>Tony<span class="l2">Huang</span></h1>
+
+  <p class="thesis">Most engineers show you what they built. I will also show you <span>how I stopped it going wrong.</span></p>
+
+  <div class="masthead__role">
+    <p class="role">AI and Automation Engineer. Data and Analytics.</p>
+    <p class="where">Master of Information Technology (Data Analytics), UTS</p>
+  </div>
+
+  <p class="employer">AI and Automation Lead, VPI Group. Four days per week on site.</p>
+
+  <div class="rights">
+    <p class="label label--second">Work rights</p>
+    <p>Full Australian working rights. Temporary Graduate visa (subclass 485), valid to 2028. No employer sponsorship required.</p>
+  </div>
+
+  <ul class="contacts">
+    <li><a href="mailto:jiayuhuang0722@gmail.com">jiayuhuang0722@gmail.com</a></li>
+    <li><a href="tel:+61426856188">+61 426 856 188</a></li>
+    <li><a href="https://github.com/Heatescape" rel="noopener">github.com/Heatescape</a></li>
+    <li><a href="https://linkedin.com/in/tony-huang-211757237" rel="noopener">linkedin.com/in/tony-huang-211757237</a></li>
+  </ul>
+</header>
+
+<main id="main">
+
+  <!-- 01 SUMMARY -->
+  <section class="wrap rule-top" aria-labelledby="s-summary">
+    <div class="grid">
+      <div class="grid__head reveal">
+        <span class="num">01</span>
+        <h2 id="s-summary">What I do</h2>
+      </div>
+      <div class="prose reveal">
+        <p class="lede">I take an ambiguous business complaint and turn it into a system people use every day.</p>
+        <p>I am the internal AI and automation lead at a Sydney property investment group. For three years I have been translating high friction manual business processes into automated systems, and since early 2026 I have been designing and delivering production generative AI applications end to end: scoping with non technical stakeholders, solution design, build, production hardening and user adoption.</p>
+        <p>I work alongside sales, accounting and property management. I find the workflows costing the business time or accuracy, gather requirements from people who do not speak in tickets, design the solution, build it, and own it through to production and adoption. I was appointed the company's first internal AI and automation lead after independently delivering its first production generative AI tool.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 SELECTED WORK -->
+  <section class="wrap rule-top" aria-labelledby="s-work">
+    <div class="grid">
+      <div class="grid__head reveal">
+        <span class="num">02</span>
+        <h2 id="s-work">Selected work</h2>
+      </div>
+      <div class="prose reveal">
+        <p class="lede">Three systems, built end to end, at a single employer: VPI Group (Vision Property Investment).</p>
+      </div>
+    </div>
+
+    <div class="work">
+
+      <!-- item 1 -->
+      <article class="item reveal">
+        <div class="item__meta">
+          <p class="item__index">01</p>
+          <h3>Portal update automation platform</h3>
+          <p class="label label--accent item__status">In production</p>
+          <p class="item__stack">Python, FastAPI, Azure SQL, Azure Blob Storage, Dropbox API, scheduled unattended operation, web dashboard.</p>
+        </div>
+        <div class="item__body">
+          <p>A five stage ETL pipeline, collect, extract, match, publish, notify, that ingests developer price lists and floor plans from heterogeneous channels including Dropbox, Box, Gmail and custom web portals, then publishes to the company's live public property portal. Roughly 30 developer file formats. The dashboard gives staff manual control, live monitoring and a human review queue.</p>
+
+          <ul class="points">
+            <li><b>Hybrid rule based and LLM document extraction.</b> The extraction engine handles 80 to 90 column name variations across developer formats, with a Gemini backed fallback for PDFs that rule based parsing cannot read. It auto detects property type, apartment, townhouse, house and land, land only, and applies type specific field mapping.</li>
+            <li><b>Multi source data reconciliation.</b> I reconciled pricing and availability across four disconnected sources: the authoritative price list, marketing floorplates, archived files and the live public portal. It surfaced data quality problems nobody had reported, including seven units carrying the price of a different building, and sold stock still publicly listed. The real insight was that the drift came from system handoffs, not from careless data entry, so the fix was a scheduled reconciliation rather than a one off cleanup.</li>
+            <li><b>Verified line by line.</b> The first source taken fully to production was confirmed record by record against the live portal rather than in dry run.</li>
+          </ul>
+
+          <dl class="figures">
+            <div><dt>217</dt><dd>records landed with zero errors on the first source taken fully to production</dd></div>
+            <div><dt>27</dt><dd>ambiguous order matches resolved with zero cross contamination</dd></div>
+            <div><dt>17 of 17</dt><dd>floorplan automation completed for one project, and 62 units on another</dd></div>
+            <div><dt>206</dt><dd>automated test files, including regression suites built from real sample PDFs</dd></div>
+            <div><dt>775</dt><dd>commits on the platform</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <!-- item 2 -->
+      <article class="item reveal">
+        <div class="item__meta">
+          <p class="item__index">02</p>
+          <h3>Agentic AI voice assistant, in the company CRM</h3>
+          <p class="label label--second item__status">Feature complete, pending compliance sign off</p>
+          <p class="item__stack">ASP.NET Core 8, .NET MAUI (Android), Google Gemini 2.5 Flash, Azure SQL, JWT authentication.</p>
+        </div>
+        <div class="item__body">
+          <p>Sales agents speak or type a question in English, Chinese or a mix of both, and the assistant either answers it or files the follow up note against the client record. It covers property search, affordability and loan calculations, and client log updates in one chat surface on the mobile app, replacing thumb typing in the field and switching between five separate screens. It is feature complete, pending compliance sign off and production authentication cutover.</p>
+
+          <ul class="points">
+            <li><b>A tool calling agent, not similarity search.</b> For a sales tool quoting prices and availability, similarity is the wrong primitive. The data has to be exact and live, so the model picks the tool and fills the parameters, and SQL does the rest.</li>
+            <li><b>Intent recognition and slot filling.</b> The language model turns natural language into typed search criteria, then selects from roughly 12 deterministic tools that query Azure SQL. The model never generates a figure itself. Speech to text runs multimodal through Gemini with schema constrained output.</li>
+            <li><b>Bilingual by design.</b> English, Chinese, or a mix of both inside the same sentence.</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- item 3 -->
+      <article class="item reveal">
+        <div class="item__meta">
+          <p class="item__index">03</p>
+          <h3>Auto Tenant Check, and the AI market analysis assistant</h3>
+          <p class="label label--accent item__status">In production, adopted daily</p>
+          <p class="item__stack">Playwright browser automation, Vision OCR, GraphQL API integration, Python, LLM report generation, installable Windows application.</p>
+        </div>
+        <div class="item__body">
+          <p><b>Auto Tenant Check</b> is a multi stage tenant screening tool integrating email intake, browser automation with Playwright, Vision OCR and credit bureau data. I diagnosed an OCR accuracy ceiling on watermarked documents, then reverse engineered the upstream GraphQL API to lift field extraction accuracy to near exact. It ships as an installable Windows application with over 230 automated tests.</p>
+          <p><b>The AI market analysis assistant</b> is an LLM powered report generator that lets non technical staff produce polished property market reports in minutes instead of hours. I gathered requirements from the sales team, iterated on output quality from their feedback, and it is now used voluntarily every day. That voluntary daily use is the part I am proudest of, because internal tools usually die on the vine.</p>
+          <a class="repo" href="https://github.com/Heatescape/cma_editor" rel="noopener">github.com/Heatescape/cma_editor</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 03 HOW I SHIP SAFELY -->
+  <section class="wrap rule-top" aria-labelledby="s-safe">
+    <div class="grid">
+      <div class="grid__head reveal">
+        <span class="num">03</span>
+        <h2 id="s-safe">How I ship safely</h2>
+      </div>
+      <div class="prose reveal">
+        <p class="lede">Publishing to a public property portal means a bad write is visible to customers.</p>
+        <p>So the controls came first, and they are the part of the work I would want reviewed hardest.</p>
+      </div>
+    </div>
+
+    <div class="controls reveal">
+      <article>
+        <p class="label label--accent">Traceability</p>
+        <h3>Audit logging on every write to live data</h3>
+        <p>Every write to live data is recorded to an audit log and remains traceable after the fact.</p>
+      </article>
+      <article>
+        <p class="label label--accent">Human in the loop</p>
+        <h3>Risk based approval routing</h3>
+        <p>Actions are routed by risk. Low risk publishes automatically. High risk goes to a human review queue.</p>
+      </article>
+      <article>
+        <p class="label label--accent">Concurrency safety</p>
+        <h3>A guard that re validates the source before writing</h3>
+        <p>An approval given against a stale preview is rejected rather than published. That control caught and blocked a real stale write incident in production.</p>
+      </article>
+      <article>
+        <p class="label label--accent">Confidentiality</p>
+        <h3>Sensitive commission data filtering</h3>
+        <p>Confidential commission figures are kept off the public portal, alongside versioned compliance archiving of every published price list.</p>
+      </article>
+      <article>
+        <p class="label label--second">Privilege separation</p>
+        <h3>The model is kept out of the permission layer</h3>
+        <p>In the CRM assistant, the identity used for a query is set by the authenticated session and can never be supplied by the model, so it cannot query on behalf of another user.</p>
+      </article>
+      <article>
+        <p class="label label--second">Bounded agency</p>
+        <h3>A capped agent loop with full tool call tracing</h3>
+        <p>The agent loop is bounded to a maximum of 6 tool calls. Every tool call is traced with its arguments and a result summary for after the fact review.</p>
+      </article>
+      <article>
+        <p class="label label--second">Anti hallucination</p>
+        <h3>A faithfulness constraint in the data contract</h3>
+        <p>The assistant must state when no option matches the buyer's budget before listing near misses, rather than relying on prompt instructions to keep it honest.</p>
+      </article>
+      <article>
+        <p class="label label--accent">Regression testing</p>
+        <h3>206 automated test files on the portal platform</h3>
+        <p>Including regression suites built from real sample PDFs, so a new developer format cannot quietly break an old one.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 04 SKILLS -->
+  <section class="wrap rule-top" aria-labelledby="s-skills">
+    <div class="grid">
+      <div class="grid__head reveal">
+        <span class="num">04</span>
+        <h2 id="s-skills">Skills</h2>
+      </div>
+      <div class="prose reveal">
+        <p class="lede">Named for what they actually are, not padded.</p>
+      </div>
+    </div>
+
+    <div class="skills reveal">
+      <article>
+        <h3>Artificial intelligence and LLM</h3>
+        <p>Generative AI, large language models, agentic AI, tool calling and function calling, prompt engineering, intent recognition and slot filling, LLM document extraction, multimodal speech to text, structured output with JSON schema, anti hallucination guardrails, OpenAI GPT-4o and Vision, Anthropic Claude, Google Gemini, GitHub Copilot.</p>
+      </article>
+      <article>
+        <h3>Data and analytics</h3>
+        <p>Python (pandas, NumPy), SQL, Azure SQL, ETL pipeline design, data reconciliation, data quality and completeness scoring, fuzzy matching and record linkage, data validation, Excel.</p>
+      </article>
+      <article>
+        <h3>Automation and delivery</h3>
+        <p>Business process analysis, requirements gathering, stakeholder engagement, end to end delivery, workflow automation, browser automation with Playwright, Optical Character Recognition, scheduled unattended operation, user training and documentation.</p>
+      </article>
+      <article>
+        <h3>Governance and reliability</h3>
+        <p>Human in the loop approval workflows, audit logging and traceability, risk based approval routing, role based access control, idempotent operations, concurrency safety, regression testing, sensitive data filtering.</p>
+      </article>
+      <article>
+        <h3>Platforms and integration</h3>
+        <p>REST and GraphQL API integration, OAuth2, JWT authentication, FastAPI, ASP.NET Core, .NET MAUI, Azure Blob Storage, Dropbox API, SQLite, Git.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 05 BACKGROUND -->
+  <section class="wrap rule-top" aria-labelledby="s-bg">
+    <div class="grid">
+      <div class="grid__head reveal">
+        <span class="num">05</span>
+        <h2 id="s-bg">Background</h2>
+      </div>
+      <div class="prose reveal">
+        <p class="lede">The generative AI work sits on two and a half years of unglamorous process automation.</p>
+      </div>
+    </div>
+
+    <div class="bg-list reveal">
+      <article>
+        <h3>VPI Group (Vision Property Investment), AI and Automation Lead</h3>
+        <p class="when">May 2023 to present</p>
+        <p>Four days per week on site, alongside a Master of Information Technology.</p>
+      </article>
+      <article>
+        <h3>Excel, VBA and Python automation</h3>
+        <p class="when">2023 to 2025</p>
+        <p>Before the generative AI work, I spent two and a half years automating the recurring reporting and data maintenance load across sales, accounting and property management. The weekly price list update process went from over 40 hours of manual work per week to under five. This is where the process automation instinct and the data validation discipline came from.</p>
+      </article>
+      <article>
+        <h3>Master of Information Technology (Data Analytics), University of Technology Sydney</h3>
+        <p class="when">Graduated July 2026</p>
+        <p>Bachelor of Information Technology (Data Analytics), University of Technology Sydney, 2024.</p>
+      </article>
+      <article>
+        <h3>Building Permit Data Analysis, academic project</h3>
+        <p class="when">Python, individual</p>
+        <p>Cleaned and analysed a 198,900 record San Francisco building permits dataset with 43 attributes. Imputed missing values using median and mode statistics alongside a linear regression cost model, engineered derived date features to measure permit approval cycle times, and visualised permit type composition, seasonal application trends and variance between estimated and final construction costs. Tools: pandas, NumPy, scikit-learn, Matplotlib, Seaborn.</p>
+      </article>
+      <article>
+        <h3>Certifications</h3>
+        <p class="when">Google</p>
+        <p>Google Data Analytics Certificate. Google Finance Data Analyst Certificate.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 06 CONTACT -->
+  <section class="wrap" aria-labelledby="s-contact">
+    <div class="contact-block">
+      <div class="grid">
+        <div class="grid__head reveal">
+          <span class="num">06</span>
+          <h2 id="s-contact">Get in touch</h2>
+        </div>
+        <div class="prose reveal">
+          <p class="lede">If you have a process that is quietly costing your team a day a week, that is the conversation I like having.</p>
+        </div>
+      </div>
+
+      <div class="contact-grid reveal">
+        <a href="mailto:jiayuhuang0722@gmail.com"><span class="label">Email</span>jiayuhuang0722@gmail.com</a>
+        <a href="tel:+61426856188"><span class="label">Phone</span>+61 426 856 188</a>
+        <a href="https://github.com/Heatescape" rel="noopener"><span class="label">GitHub</span>github.com/Heatescape</a>
+        <a href="https://linkedin.com/in/tony-huang-211757237" rel="noopener"><span class="label">LinkedIn</span>linkedin.com/in/tony-huang-211757237</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <p>Tony Huang, Sydney NSW. Full Australian working rights, Temporary Graduate visa (subclass 485) valid to 2028. No employer sponsorship required. Referees available on request.</p>
+</footer>
+
+<script>
+  document.documentElement.classList.add('js');
+  (function(){
+    var nodes = document.querySelectorAll('.reveal');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      for (var i = 0; i < nodes.length; i++) nodes[i].classList.add('is-in');
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+    for (var j = 0; j < nodes.length; j++) io.observe(nodes[j]);
+  })();
+</script>
+</body>
 </html>
