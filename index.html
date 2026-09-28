@@ -637,6 +637,26 @@
         </div>
       </article>
 
+      <!-- item 4 -->
+      <article class="item reveal">
+        <div class="item__meta">
+          <p class="item__index">04</p>
+          <h3>plumbline, a reconciliation stage you can run yourself</h3>
+          <p class="label label--second item__status">Public, runnable, clean room</p>
+          <p class="item__stack">Python, PyMuPDF, pandas, pytest, GitHub Actions CI.</p>
+        </div>
+        <div class="item__body">
+          <p>The work above is closed source and holds client data, which leaves a reviewer taking my word for it. So I rebuilt one stage of it from scratch against generated data: take a marketing floorplate PDF, reconcile it against the authoritative price list, and mark up what has drifted. Prices that moved get struck and rewritten, stock the list no longer carries gets a SOLD stamp, a label printed on the plate that does not exist in the list at all gets boxed.</p>
+
+          <ul class="points">
+            <li><b>It runs with nothing on hand.</b> The tool generates its own synthetic inputs from a seeded random number generator, so <code>reconcile demo</code> goes end to end on a clean checkout. No real development, address, price, person or company appears anywhere in it.</li>
+            <li><b>The demo is part of the build.</b> CI does not only run the 36 tests, it runs the demo and asserts the artefacts came out non empty. For a repository whose whole claim is that you can run it, a broken demo is a broken build.</li>
+            <li><b>It is a keyhole, not the platform.</b> It deliberately covers one stage rather than imitating the whole system, because something built to look like a platform in a portfolio ends up looking like a toy in every part.</li>
+          </ul>
+          <a class="repo" href="https://github.com/Heatescape/plumbline" rel="noopener">github.com/Heatescape/plumbline</a>
+        </div>
+      </article>
+
     </div>
   </section>
 
