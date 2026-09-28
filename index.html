@@ -317,6 +317,19 @@
 
   .item__body>*:first-child{margin-top:0}
 
+  /* The honest caveat under a project. Deliberately quieter than the claims it
+     qualifies, and set off by a rule so a skimming reader still sees it. */
+  .item__note{
+    font-family:var(--sans);
+    font-size:0.875rem;
+    line-height:1.6;
+    color:var(--muted);
+    margin:1.5em 0 0;
+    padding-top:0.9em;
+    border-top:1px solid var(--rule);
+    max-width:62ch;
+  }
+
   .points{list-style:none;margin:1.35em 0 0;padding:0;max-width:66ch}
   .points li{
     position:relative;
@@ -511,16 +524,16 @@
     </div>
     <dl class="proof">
       <div>
-        <dt>217</dt>
-        <dd>Records landed. Zero errors on the first source taken fully to production.</dd>
+        <dt>16,453</dt>
+        <dd>Writes to the live property portal, unattended, every one recorded to an audit log.</dd>
       </div>
       <div>
-        <dt>206</dt>
-        <dd>Automated test files, including regression suites built from real sample PDFs.</dd>
+        <dt>102</dt>
+        <dd>Of 161 human review decisions were rejections, which is what makes the approval gate real.</dd>
       </div>
       <div>
-        <dt>775</dt>
-        <dd>Commits on the platform that publishes to the live portal.</dd>
+        <dt>803</dt>
+        <dd>Commits on that platform, all of them mine, over three and a half months.</dd>
       </div>
     </dl>
   </div>
@@ -557,7 +570,7 @@
       <div class="prose reveal">
         <p class="lede">I take an ambiguous business complaint and turn it into a system people use every day.</p>
         <p>I am the internal AI and automation lead at a Sydney property investment group. For three years I have been translating high friction manual business processes into automated systems, and since early 2026 I have been designing and delivering production generative AI applications end to end: scoping with non technical stakeholders, solution design, build, production hardening and user adoption.</p>
-        <p>I work alongside sales, accounting and property management. I find the workflows costing the business time or accuracy, gather requirements from people who do not speak in tickets, design the solution, build it, and own it through to production and adoption. I was appointed the company's first internal AI and automation lead after independently delivering its first production generative AI tool.</p>
+        <p>I work alongside sales, accounting and property management. I find the workflows costing the business time or accuracy, gather requirements from people who do not speak in tickets, design the solution, build it, and own it through to production and adoption. The lead role was not assigned to me first: I built a small tool off my own initiative, the owner saw what it did, and the company's first internal AI and automation lead role followed from that.</p>
       </div>
     </div>
   </section>
@@ -570,7 +583,7 @@
         <h2 id="s-work">Selected work</h2>
       </div>
       <div class="prose reveal">
-        <p class="lede">Three systems, built end to end, at a single employer: VPI Group (Vision Property Investment).</p>
+        <p class="lede">Three systems built end to end at a single employer, VPI Group (Vision Property Investment), and one public repository you can run yourself.</p>
       </div>
     </div>
 
@@ -580,26 +593,30 @@
       <article class="item reveal">
         <div class="item__meta">
           <p class="item__index">01</p>
-          <h3>Portal update automation platform</h3>
-          <p class="label label--accent item__status">In production</p>
-          <p class="item__stack">Python, FastAPI, Azure SQL, Azure Blob Storage, Dropbox API, scheduled unattended operation, web dashboard.</p>
+          <h3>VPI Hub, the platform that publishes to the live portal</h3>
+          <p class="label label--accent item__status">In production, unattended</p>
+          <p class="item__stack">Python, FastAPI, server rendered templates with Alpine.js and Tailwind, SQLite, APScheduler, Playwright, a vision model used only to read unit numbers off plans.</p>
         </div>
         <div class="item__body">
-          <p>A five stage ETL pipeline, collect, extract, match, publish, notify, that ingests developer price lists and floor plans from heterogeneous channels including Dropbox, Box, Gmail and custom web portals, then publishes to the company's live public property portal. Roughly 30 developer file formats. The dashboard gives staff manual control, live monitoring and a human review queue.</p>
+          <p class="lede">Doing the same coverage by hand takes about 123 hours, which is why nobody had ever done it completely. This did not make the job faster. It made an undoable job happen every week.</p>
+          <p>Twenty developer sources arrive as price lists and floor plans, in whatever shape each developer likes. The platform collects them unattended, extracts them, matches them against 188 projects on the company's live public property portal, and writes back through a human approval gate with an audit log behind it. Twenty page routes and 152 API routes, and the people who use it are not engineers: they drag schedules on a calendar, approve or reject in a queue, and edit project details that write back to the portal.</p>
 
           <ul class="points">
-            <li><b>Hybrid rule based and LLM document extraction.</b> The extraction engine handles 80 to 90 column name variations across developer formats, with a Gemini backed fallback for PDFs that rule based parsing cannot read. It auto detects property type, apartment, townhouse, house and land, land only, and applies type specific field mapping.</li>
-            <li><b>Multi source data reconciliation.</b> I reconciled pricing and availability across four disconnected sources: the authoritative price list, marketing floorplates, archived files and the live public portal. It surfaced data quality problems nobody had reported, including seven units carrying the price of a different building, and sold stock still publicly listed. The real insight was that the drift came from system handoffs, not from careless data entry, so the fix was a scheduled reconciliation rather than a one off cleanup.</li>
-            <li><b>Verified line by line.</b> The first source taken fully to production was confirmed record by record against the live portal rather than in dry run.</li>
+            <li><b>The hard part is dirty input, not architecture.</b> Every developer's spreadsheet is laid out differently, and the same unit is written one way on the price list and another way on the floor plan. Matching runs on normalisation and fuzzy linkage with confidence bands, and anything under the automatic threshold goes to a person.</li>
+            <li><b>A write window that is only ever open for one project.</b> Each production write is fenced to the single project being processed and closes immediately after. If a file cannot be read it is held rather than guessed at, a file with an anomalous page count is refused, and if the vision quota runs out the system will not fall back to the weaker reader. Output identical to the input while claiming to have marked up N units is a hard error.</li>
+            <li><b>Multi source reconciliation found problems nobody had reported.</b> Comparing the price list, the marketing floorplates, the archived files and the live portal surfaced seven units carrying another building's price, and sold stock still publicly listed. The drift came from handoffs between systems rather than careless typing, so the fix was a scheduled reconciliation rather than a one off cleanup.</li>
+            <li><b>I found a concurrency fault by reading a broken artefact.</b> A scheduled job and a hand run job reached the markup stage through different entry points, shared no lock, and produced a zero byte deliverable. All paths now take one operating system level file lock.</li>
           </ul>
 
           <dl class="figures">
-            <div><dt>217</dt><dd>records landed with zero errors on the first source taken fully to production</dd></div>
-            <div><dt>27</dt><dd>ambiguous order matches resolved with zero cross contamination</dd></div>
-            <div><dt>17 of 17</dt><dd>floorplan automation completed for one project, and 62 units on another</dd></div>
-            <div><dt>206</dt><dd>automated test files, including regression suites built from real sample PDFs</dd></div>
-            <div><dt>775</dt><dd>commits on the platform</dd></div>
+            <div><dt>16,453</dt><dd>writes to the live portal: 9,705 created, 3,641 repriced, 1,584 withdrawn, 1,355 relisted</dd></div>
+            <div><dt>20</dt><dd>developer sources collected unattended, reconciled against 188 projects on the live portal</dd></div>
+            <div><dt>2,359</dt><dd>price labels printed onto 505 floor plates, held back rather than published when a check fails</dd></div>
+            <div><dt>2,687</dt><dd>test functions across 210 test files, a test to code line ratio of 0.71</dd></div>
+            <div><dt>803</dt><dd>commits, all mine, 12 May to 26 August 2026</dd></div>
           </dl>
+
+          <p class="item__note">What it is not, because the scale invites the wrong guess: a single tenant internal platform on one machine with one SQLite database and an in process scheduler. Not multi tenant, not distributed, not microservices. It holds developer credentials and full pricing, so it is deliberately not opened up to the sales floor. Running it on a server with CI is the next thing it needs.</p>
         </div>
       </article>
 
@@ -626,13 +643,13 @@
       <article class="item reveal">
         <div class="item__meta">
           <p class="item__index">03</p>
-          <h3>Auto Tenant Check, and the AI market analysis assistant</h3>
+          <h3>Auto Tenant Check, and the market report generator</h3>
           <p class="label label--accent item__status">In production, adopted daily</p>
           <p class="item__stack">Playwright browser automation, Vision OCR, GraphQL API integration, Python, LLM report generation, installable Windows application.</p>
         </div>
         <div class="item__body">
-          <p><b>Auto Tenant Check</b> is a multi stage tenant screening tool integrating email intake, browser automation with Playwright, Vision OCR and credit bureau data. I diagnosed an OCR accuracy ceiling on watermarked documents, then reverse engineered the upstream GraphQL API to lift field extraction accuracy to near exact. It ships as an installable Windows application with over 230 automated tests.</p>
-          <p><b>The AI market analysis assistant</b> is an LLM powered report generator that lets non technical staff produce polished property market reports in minutes instead of hours. I gathered requirements from the sales team, iterated on output quality from their feedback, and it is now used voluntarily every day. That voluntary daily use is the part I am proudest of, because internal tools usually die on the vine.</p>
+          <p><b>Auto Tenant Check</b> is a multi stage tenant screening tool integrating email intake, browser automation with Playwright, Vision OCR and credit bureau data. I wrote the pass mark into the tool before measuring anything: at least 30 comparisons, and 95 percent on the fields that gate a decision. Benchmarked against 30 real applications it came out at 95.3 percent across the five gating fields, with phone and both address fields perfect but email at 80 percent, so email failed the bar I had set. Rather than tune the reader I diagnosed the ceiling as watermarking, reverse engineered the upstream GraphQL API, and moved nine text fields onto the structured source in a staged shadow then cutover migration. That does not improve the transcription error, it removes it by construction. Identity document numbers still go through vision extraction and I have no number worth quoting for them. It ships as an installable Windows application.</p>
+          <p><b>The market report generator</b> is an LLM backed tool that lets non technical staff produce a polished property market report themselves. I gathered the requirements from the sales team and iterated on output quality from their feedback, and a non technical colleague now reaches for it by choice. That voluntary use is the part I am proudest of, because internal tools usually die on the vine.</p>
           <a class="repo" href="https://github.com/Heatescape/cma_editor" rel="noopener">github.com/Heatescape/cma_editor</a>
         </div>
       </article>
@@ -686,8 +703,8 @@
       </article>
       <article>
         <p class="label label--accent">Concurrency safety</p>
-        <h3>A guard that re validates the source before writing</h3>
-        <p>An approval given against a stale preview is rejected rather than published. That control caught and blocked a real stale write incident in production.</p>
+        <h3>One lock across every path that writes</h3>
+        <p>Two entry points once reached the markup stage without a shared lock and produced a zero byte deliverable. Diagnosing that is what put an operating system level file lock on every path, rather than a lock on the path I happened to be looking at.</p>
       </article>
       <article>
         <p class="label label--accent">Confidentiality</p>
@@ -702,7 +719,7 @@
       <article>
         <p class="label label--second">Bounded agency</p>
         <h3>A capped agent loop with full tool call tracing</h3>
-        <p>The agent loop is bounded to a maximum of 6 tool calls. Every tool call is traced with its arguments and a result summary for after the fact review.</p>
+        <p>The agent loop runs to a default ceiling of 6 tool calls, and every call is traced with its arguments and a result summary for after the fact review. The ceiling is a default rather than something the server clamps, which is worth saying plainly.</p>
       </article>
       <article>
         <p class="label label--second">Anti hallucination</p>
@@ -711,8 +728,8 @@
       </article>
       <article>
         <p class="label label--accent">Regression testing</p>
-        <h3>206 automated test files on the portal platform</h3>
-        <p>Including regression suites built from real sample PDFs, so a new developer format cannot quietly break an old one.</p>
+        <h3>2,687 test functions on the portal platform</h3>
+        <p>Across 210 test files, a test to code line ratio of 0.71, including regression suites built from real sample PDFs so that supporting a new developer format cannot quietly break an old one.</p>
       </article>
     </div>
   </section>
@@ -774,7 +791,7 @@
       <article>
         <h3>Excel, VBA and Python automation</h3>
         <p class="when">2023 to 2025</p>
-        <p>Before the generative AI work, I spent two and a half years automating the recurring reporting and data maintenance load across sales, accounting and property management. The weekly price list update process went from over 40 hours of manual work per week to under five. This is where the process automation instinct and the data validation discipline came from.</p>
+        <p>Before the generative AI work, I spent two and a half years automating the recurring reporting and data maintenance load across sales, accounting and property management, including the weekly developer price list update that later grew into the platform above. Unglamorous work, and it is where the process automation instinct and the data validation discipline came from.</p>
       </article>
       <article>
         <h3>Master of Information Technology (Data Analytics), University of Technology Sydney</h3>
